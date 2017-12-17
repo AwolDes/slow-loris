@@ -3,6 +3,7 @@ Slow Loris attack written in Go
 
 # Usage
 Install: `go get github.com/awoldes/slow-loris`
+
 Launch: `slow-loris -u https://test.com -p 443 -c 200`
 
 ## Defaults
