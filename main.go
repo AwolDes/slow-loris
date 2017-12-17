@@ -35,13 +35,14 @@ func main() {
 
 	fmt.Printf("Blasting %v on port %v with %v concurrent connections\n", *url, *port, *connections)
 	var wg sync.WaitGroup
-	for i := 0; i < *connections; i++ {
+	for threads := 0; threads < *connections; threads++ {
 		wg.Add(1)
 		go func(){
-			OpenSocket(*url, *port, *limit)
+			OpenSocket(*url, *port, *limit, threads)
 			wg.Done()
 		}()
 	}
 	wg.Wait()
+	fmt.Printf("Finished requesting %v\n", *url)
 	os.Exit(0)
 }
