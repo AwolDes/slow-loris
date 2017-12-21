@@ -49,9 +49,7 @@ func OpenSocket(addr string, port string, limit int, thread int) {
 func checkNetError(conn *net.TCPConn, addr string, port string, limit int, thread int, err error) {
     if err != nil {
 		fmt.Fprintf(os.Stderr, "\n\nFatal network error: %s\n\n", err.Error())
-		// conn.Close()
-		SpawnSocket(addr, port, limit, thread)
-		// OpenSocket(addr, port, limit, thread)
+		SpawnSocket(addr, port, limit, thread)\
     }
 }
 
